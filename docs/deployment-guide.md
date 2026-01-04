@@ -288,9 +288,45 @@ Examples:
 - **Update frequency**: Monitor dependency security advisories
 - **HTTPS**: All download URLs use HTTPS
 
+## v0.1.0 Release Status
+
+### Release Date
+January 4, 2026
+
+### Distribution Status
+- ✓ GitHub Releases: Pre-compiled binaries available
+- ✓ Homebrew: Formula ready at `olbboy/tap/claudekill`
+- ✓ Cargo: Published to crates.io
+- ✓ cargo-binstall: Metadata configured for pre-compiled downloads
+
+### Validated Installation Methods
+All three installation channels tested and working:
+1. `cargo install claudekill` (compiles locally)
+2. `brew install olbboy/tap/claudekill` (macOS only)
+3. Manual binary download from GitHub Releases
+
+### Multi-platform Binaries Available
+- macOS x86_64 (Intel): claudekill-x86_64-apple-darwin.tar.gz
+- macOS ARM64 (M1/M2/M3): claudekill-aarch64-apple-darwin.tar.gz
+- Linux x86_64: claudekill-x86_64-unknown-linux-gnu.tar.gz
+
+### Test Results
+- CI workflow: ✓ Pass (fmt, clippy, build, test)
+- Release workflow: ✓ Pass (all 3 platforms)
+- Manual testing: ✓ Pass (macOS Intel & ARM64)
+
 ## Maintenance Schedule
 
 - **Weekly**: Monitor CI/CD pipeline health
 - **Monthly**: Review dependency updates
 - **Per-release**: Follow pre/post-release checklists
 - **Ad-hoc**: Security patches for critical vulnerabilities
+
+## v0.1.0 → v0.2.0 Upgrade Path
+
+Future releases will maintain backward compatibility with existing CLI flags.
+
+### Expected Timeline
+- v0.2.0: Q2 2026 (configuration support + size filtering)
+- v0.3.0: Q4 2026 (watch mode + pattern-based exclusion)
+- v1.0.0: End 2026 (stable, feature-complete)

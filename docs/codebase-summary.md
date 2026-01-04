@@ -299,6 +299,64 @@ Keeps published crate lean and excludes internal tools.
 - [ ] Pattern-based exclusion
 - [ ] Scheduled cleanup automation
 
+## Module Architecture
+
+### Entry Point: `main.rs` (235 lines)
+- **Clap CLI parsing**: `--path`, `--dry-run`, `--include-global`, `--permanent` flags
+- **Dry-run mode**: Non-interactive scanning and listing
+- **TUI launcher**: Initializes interactive mode with full state management
+- **Error propagation**: All errors bubble up as `anyhow::Result<()>`
+
+### State Machine: `app.rs` (116 lines)
+```
+Scanning → Browsing → Confirming → Deleting → Done
+```
+- **AppState enum**: Five distinct states for UI lifecycle
+- **App struct**: Central state holder (folders, selection, deletion mode)
+- **State transitions**: Helper methods for navigation and selection
+- **Folder sorting**: Auto-sorts by size (largest first) for UX
+
+### Directory Scanner: `scanner.rs` (141 lines)
+- **Parallel traversal**: Uses `jwalk` for multi-threaded directory walks
+- **Streaming results**: MPSC channel for event-driven scanning
+- **Project detection**: Identifies parent project type (.git, Cargo.toml, etc.)
+- **Size calculation**: Recursive size computation for each .claude folder
+- **Global exclusion**: Skips `~/.claude` by default unless `--include-global`
+
+### Project Type Detection: `project.rs` (69 lines)
+- **Manifest detection**: Identifies parent project by looking for:
+  - `.git/` (Git repository)
+  - `Cargo.toml` (Rust project)
+  - `package.json` (Node.js project)
+  - `pyproject.toml` (Python project)
+- **Display formatting**: Shows readable project type in TUI
+
+### Trash Integration: `trash.rs` (130 lines)
+- **Safe deletion**: Uses `trash` crate for OS-native Trash
+- **Validation**: Checks permissions before attempting deletion
+- **Fallback logic**: Permanent delete if trash fails
+- **Error recovery**: Detailed error messages on failures
+- **Unit tests**: 6 integration tests covering success/error cases
+
+### Terminal UI Core: `tui.rs` (29 lines)
+- **Terminal setup**: Enables raw mode with crossterm
+- **Cleanup**: Graceful shutdown and cursor restoration
+- **Panic hook**: Ensures TUI is restored even on panic
+
+### UI Rendering: `ui/render.rs` (324 lines)
+- **Layout**: ratatui frame rendering with constraints
+- **Status bar**: Shows scan progress and keyboard hints
+- **Folder list**: Scrollable list with current selection highlight
+- **Folder details**: Size, path, and parent project information
+- **Help overlay**: Modal display of keyboard shortcuts
+- **Color support**: Styled text with ratatui primitives
+
+### Input Handling: `ui/keybinds.rs` (84 lines)
+- **Non-blocking input**: Reads from crossterm event stream
+- **Vim keybinds**: Support for hjkl navigation (+ arrow keys)
+- **Bulk operations**: Select all (a), deselect all (n)
+- **Help toggle**: ? key for keyboard shortcut display
+
 ## Getting Started for Contributors
 
 1. Clone repository
@@ -310,22 +368,42 @@ Keeps published crate lean and excludes internal tools.
 
 See `docs/code-standards.md` for detailed contribution guidelines.
 
-## Release Checklist Summary
+## v0.1.0 Completion Status
 
-**Pre-release**:
-- [ ] Update Cargo.toml version
-- [ ] Run clippy/fmt/test
-- [ ] Manual testing on macOS
-- [ ] Commit & push
+### Phase 1: Core CLI (✓ Complete)
+- Interactive TUI with ratatui
+- Directory scanning with jwalk
+- Trash integration
+- All keyboard shortcuts functional
 
-**Release**:
-- [ ] Create annotated git tag
-- [ ] Push tag (triggers CI/CD)
-- [ ] Verify artifacts on GitHub
+### Phase 2: Safety & Testing (✓ Complete)
+- 6 unit tests in trash.rs
+- Error handling with anyhow
+- Safe-by-default (Trash, not permanent delete)
 
-**Post-release**:
-- [ ] Update Homebrew SHA256
-- [ ] `cargo publish`
-- [ ] Announce release
+### Phase 3: Code Quality (✓ Complete)
+- Clippy: All warnings addressed
+- Rustfmt: Code styled correctly
+- Performance: Binary <15MB, scan <5s
 
-See `RELEASING.md` for detailed checklist.
+### Phase 4: Documentation (✓ Complete)
+- README with installation and usage
+- Code standards documented
+- System architecture explained
+- Comprehensive codebase guide
+
+### Phase 5: Distribution (✓ Complete)
+- Multi-platform CI/CD (macOS x86_64/ARM64, Linux)
+- Homebrew formula with dual-arch support
+- cargo-binstall metadata configured
+- GitHub Releases with automated builds
+- RELEASING.md checklist for repeatable deployments
+
+## Release Readiness
+
+**v0.1.0 Status**: Release-ready
+- All 5 development phases complete
+- CI/CD tested and operational
+- Pre-compiled binaries available for all 3 platforms
+- Installation methods validated (Cargo, Homebrew, GitHub)
+- Release documentation in place

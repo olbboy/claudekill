@@ -88,11 +88,12 @@ claudekill --permanent
 ## Documentation
 
 For detailed information, see:
-- [Project Overview & PDR](docs/project-overview-pdr.md) - Phase 5 requirements and goals
+- [Project Overview & PDR](docs/project-overview-pdr.md) - v0.1.0 requirements and goals (all phases complete)
 - [System Architecture](docs/system-architecture.md) - Technical design and CI/CD pipeline
-- [Code Standards](docs/code-standards.md) - Development guidelines and testing
-- [Deployment Guide](docs/deployment-guide.md) - Installation and release procedures
-- [Codebase Summary](docs/codebase-summary.md) - Project structure and components
+- [Code Standards](docs/code-standards.md) - Development guidelines and testing standards
+- [Deployment Guide](docs/deployment-guide.md) - Installation methods and release procedures
+- [Codebase Summary](docs/codebase-summary.md) - Project structure and 9 source modules
+- [Project Roadmap](docs/project-roadmap.md) - v0.2.0+ planned features and timeline
 
 ## License
 

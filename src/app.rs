@@ -91,7 +91,11 @@ impl App {
     }
 
     pub fn selected_size(&self) -> u64 {
-        self.folders.iter().filter(|f| f.selected).map(|f| f.size).sum()
+        self.folders
+            .iter()
+            .filter(|f| f.selected)
+            .map(|f| f.size)
+            .sum()
     }
 
     pub fn total_size(&self) -> u64 {

@@ -3,7 +3,7 @@
 use crate::project;
 use jwalk::WalkDir;
 use std::path::{Path, PathBuf};
-use std::sync::mpsc::{channel, Receiver, Sender};
+use std::sync::mpsc::{Receiver, Sender, channel};
 use std::thread;
 
 /// Represents a found .claude folder with metadata
@@ -50,7 +50,10 @@ pub struct Scanner {
 
 impl Scanner {
     pub fn new(root: PathBuf, include_global: bool) -> Self {
-        Self { root, include_global }
+        Self {
+            root,
+            include_global,
+        }
     }
 
     /// Scan for .claude folders, returns receiver for streaming results

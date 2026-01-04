@@ -2,11 +2,11 @@
 
 use crate::app::{App, AppState};
 use ratatui::{
+    Frame,
     layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
     text::{Line, Span},
     widgets::{Block, Borders, Clear, List, ListItem, Paragraph},
-    Frame,
 };
 
 /// Render the application UI
@@ -160,8 +160,11 @@ fn render_list(frame: &mut Frame, area: Rect, app: &App) {
         })
         .collect();
 
-    let list =
-        List::new(items).block(Block::default().borders(Borders::ALL).title(" .claude folders "));
+    let list = List::new(items).block(
+        Block::default()
+            .borders(Borders::ALL)
+            .title(" .claude folders "),
+    );
 
     frame.render_widget(list, area);
 }

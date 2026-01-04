@@ -21,14 +21,10 @@ pub fn detect(claude_path: &Path) -> String {
         {
             return "Next.js".to_string();
         }
-        if parent.join("nuxt.config.ts").exists()
-            || parent.join("nuxt.config.js").exists()
-        {
+        if parent.join("nuxt.config.ts").exists() || parent.join("nuxt.config.js").exists() {
             return "Nuxt".to_string();
         }
-        if parent.join("vite.config.ts").exists()
-            || parent.join("vite.config.js").exists()
-        {
+        if parent.join("vite.config.ts").exists() || parent.join("vite.config.js").exists() {
             return "Vite".to_string();
         }
         if parent.join("angular.json").exists() {

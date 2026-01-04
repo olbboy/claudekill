@@ -162,11 +162,7 @@ fn run_tui(root: &Path, include_global: bool, permanent: bool) -> Result<()> {
                         .map(|f| f.path.clone())
                         .collect();
 
-                    let deleted_size: u64 = app
-                        .get_selected_folders()
-                        .iter()
-                        .map(|f| f.size)
-                        .sum();
+                    let deleted_size: u64 = app.get_selected_folders().iter().map(|f| f.size).sum();
 
                     // Safety validation before deletion
                     if let Err(e) = trash::validate_deletion(&folders) {

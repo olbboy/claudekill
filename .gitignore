@@ -78,3 +78,9 @@ ck.md
 # Added by cargo
 
 /target
+
+.claude
+CLAUDE.md
+.repomixignore
+docs
+plans

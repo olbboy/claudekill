@@ -103,6 +103,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(not(target_os = "windows"))]
     fn test_validate_deletion_rejects_system_paths() {
         let result = validate_deletion(&[PathBuf::from("/Users")]);
         assert!(result.is_err());

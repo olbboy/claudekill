@@ -1,100 +1,108 @@
-# claudekill
+<div align="center">
 
-> Find and delete `.claude` folders to reclaim disk space.
+<img src="docs/logo.svg" alt="ClaudeKill Logo" width="600">
 
-Like [npkill](https://github.com/voidcosmos/npkill) but for Claude Code cache directories.
+### <code>THE SURGICAL CACHE CLEANER</code>
 
-## Features
+[![License](https://img.shields.io/badge/LICENSE-MIT-black?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Crates.io](https://img.shields.io/crates/v/claudekill.svg?style=for-the-badge&color=fc4903)](https://crates.io/crates/claudekill)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/olbboy/claudekill/ci.yml?branch=master&style=for-the-badge&color=2ea44f)](https://github.com/olbboy/claudekill/actions)
 
-- Fast parallel scanning of home directory
-- Interactive TUI with keyboard navigation
-- Moves to Trash by default (safe)
-- Shows folder sizes and project types
-- Excludes global `~/.claude` by default
-- Cross-platform (macOS, Linux)
+<br/>
 
-## Installation
+> **OBLITERATE NOISE. RECLAIM SPACE.**
+>
+> <code>ClaudeKill</code> is a high-velocity, terminal-native instrument designed to hunt down and neutralize `.claude` cache directories.
 
-### Homebrew (macOS) - Recommended
+[FEATURES](#-system-capabilities) • [INSTALL](#-deployment) • [USAGE](#-command-deck) • [DOCS](#-intelligence)
+
+</div>
+
+---
+
+## ⚡️ SYSTEM CAPABILITIES
+
+| | |
+| :--- | :--- |
+| **🚀 PARALLEL CORE** | Multi-threaded filesystem traversal engine (`jwalk`). Scans sectors in milliseconds. |
+| **🛡️ FAILSAFE** | **Safe Mode active.** Targets are moved to Trash. Hard-delete is opt-in only. |
+| **🕹️ TERMINAL UI** | Keyboard-driven interface. VIM-style navigation. Pure retro feel. |
+| **🔮 X-RAY** | Real-time storage impact visualization. Know the cost before you purge. |
+
+## 📦 DEPLOYMENT
+
+### POSIX // MACOS
 
 ```bash
 brew install olbboy/tap/claudekill
 ```
 
-**First time setup** (one-time):
-```bash
-brew tap olbboy/tap
-brew install claudekill
-```
-
-### Cargo (Rust developers)
+### RUST // CARGO
 
 ```bash
 cargo install claudekill
-```
-
-**Faster with pre-compiled binaries**:
-```bash
-cargo install cargo-binstall
+# OR via Binstall
 cargo binstall claudekill
 ```
 
-### Binary Release (Manual install)
+### MANUAL // BINARY
 
-Download pre-compiled binaries from [GitHub Releases](https://github.com/olbboy/claudekill/releases):
+1.  Access [**GITHUB RELEASES**](https://github.com/olbboy/claudekill/releases).
+2.  Acquire target binary (`x86_64` / `aarch64`).
+3.  Execute.
 
-- `claudekill-x86_64-apple-darwin.tar.gz` - macOS Intel
-- `claudekill-aarch64-apple-darwin.tar.gz` - macOS Apple Silicon (M1/M2/M3)
-- `claudekill-x86_64-unknown-linux-gnu.tar.gz` - Linux
+## 🎮 COMMAND DECK
 
-Extract and move to PATH:
-```bash
-tar xzf claudekill-*.tar.gz
-sudo mv claudekill /usr/local/bin/
-```
-
-## Usage
+Run `claudekill` to initialize the visual interface.
 
 ```bash
-# Interactive mode
-claudekill
-
-# Scan specific directory
-claudekill --path ~/Projects
-
-# List only (no TUI)
-claudekill --dry-run
-
-# Include global ~/.claude
-claudekill --include-global
-
-# Permanent delete (skip Trash)
-claudekill --permanent
+$ claudekill
 ```
 
-## Keyboard Shortcuts
+### INTERFACE
 
-| Key | Action |
-|-----|--------|
-| ↑/k | Move up |
-| ↓/j | Move down |
-| Space | Toggle selection |
-| a | Select all |
-| n | Deselect all |
-| d | Delete selected |
-| ? | Toggle help |
-| q/Esc | Quit |
+```text
+┌────────────────────────────────────────────────────────────┐
+│  SCANNING SECTOR: /Users/neo                               │
+│  [24 TARGETS FOUND]                                        │
+│                                                            │
+│  [ ] ~/Projects/matrix-sim/.claude            1.2 GB       │
+│  [x] ~/Projects/legacy-zion/.claude           450 MB       │
+│  [ ] ~/Downloads/construct-v1/.claude         120 MB       │
+│                                                            │
+│  TOTAL SELECTED: 450 MB                                    │
+└────────────────────────────────────────────────────────────┘
+   ↑/↓: NAVIGATE  •  SPACE: TOGGLE  •  d: EXECUTE TRASH
+```
 
-## Documentation
+### CLI ARGS
 
-For detailed information, see:
-- [Project Overview & PDR](docs/project-overview-pdr.md) - v0.1.0 requirements and goals (all phases complete)
-- [System Architecture](docs/system-architecture.md) - Technical design and CI/CD pipeline
-- [Code Standards](docs/code-standards.md) - Development guidelines and testing standards
-- [Deployment Guide](docs/deployment-guide.md) - Installation methods and release procedures
-- [Codebase Summary](docs/codebase-summary.md) - Project structure and 9 source modules
-- [Project Roadmap](docs/project-roadmap.md) - v0.2.0+ planned features and timeline
+| PARAMETER | EFFECT |
+| :--- | :--- |
+| `--path <DIR>` | **TARGET LOCK.** Scan specific sector only. |
+| `--dry-run` | **RECON.** List targets; no UI engagement. |
+| `--include-global` | **OVERRIDE.** Scan `~/.claude` global cache. |
+| `--permanent` | **INCINERATE.** Bypass Trash. **NO UNDO.** |
 
-## License
+### KEYBINDINGS
 
-MIT License - See [LICENSE](LICENSE) for details.
+| INPUT | ACTION |
+| :--- | :--- |
+| `k` / `↑` | **UP** |
+| `j` / `↓` | **DOWN** |
+| `SPACE` | **MARK TARGET** |
+| `a` | **MARK ALL** |
+| `d` | **EXECUTE** |
+| `q` | **ABORT** |
+
+## 📚 INTELLIGENCE
+
+- **[MISSION BRIEF](docs/project-overview-pdr.md)** // PROJECT GOALS
+- **[SCHEMATICS](docs/system-architecture.md)** // ARCHITECTURE
+- **[PROTOCOLS](docs/deployment-guide.md)** // RELEASE GUIDE
+
+---
+
+<div align="center">
+  <sub>MIT LICENSE // EST. 2024 // OPEN SOURCE</sub>
+</div>

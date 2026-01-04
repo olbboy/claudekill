@@ -1,0 +1,36 @@
+[package]
+name = "claudekill"
+version = "0.1.0"
+edition = "2024"
+description = "Find and delete .claude folders to reclaim disk space"
+license = "MIT"
+repository = "https://github.com/user/claudekill"
+keywords = ["cli", "tui", "claude", "cleanup", "disk-space"]
+categories = ["command-line-utilities"]
+
+[dependencies]
+# TUI
+ratatui = "0.29"
+crossterm = "0.28"
+
+# Directory scanning
+jwalk = "0.8"
+
+# Trash
+trash = "5"
+
+# CLI
+clap = { version = "4.5", features = ["derive"] }
+
+# Utilities
+dirs = "6.0"
+anyhow = "1.0"
+
+[dev-dependencies]
+tempfile = "3"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"

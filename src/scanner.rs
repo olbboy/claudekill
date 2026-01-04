@@ -18,19 +18,7 @@ pub struct ClaudeFolder {
 impl ClaudeFolder {
     /// Format size for display (e.g., "156.2 MB")
     pub fn size_display(&self) -> String {
-        const KB: u64 = 1024;
-        const MB: u64 = KB * 1024;
-        const GB: u64 = MB * 1024;
-
-        if self.size >= GB {
-            format!("{:.1} GB", self.size as f64 / GB as f64)
-        } else if self.size >= MB {
-            format!("{:.1} MB", self.size as f64 / MB as f64)
-        } else if self.size >= KB {
-            format!("{:.1} KB", self.size as f64 / KB as f64)
-        } else {
-            format!("{} B", self.size)
-        }
+        crate::utils::format_size(self.size)
     }
 }
 

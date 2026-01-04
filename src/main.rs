@@ -4,6 +4,7 @@ mod scanner;
 mod trash;
 mod tui;
 mod ui;
+mod utils;
 
 use anyhow::Result;
 use clap::Parser;
@@ -104,7 +105,7 @@ fn dry_run(root: &Path, include_global: bool) -> Result<()> {
     // Summary
     let total_size: u64 = folders.iter().map(|f| f.size).sum();
     println!("{}", "-".repeat(80));
-    println!("{:>10}  Total", format_size(total_size));
+    println!("{:>10}  Total", utils::format_size(total_size));
 
     Ok(())
 }
@@ -190,7 +191,7 @@ fn run_tui(root: &Path, include_global: bool, permanent: bool) -> Result<()> {
                                 "{} {} folder(s). {} reclaimed.",
                                 method,
                                 folders.len(),
-                                format_size(deleted_size)
+                                utils::format_size(deleted_size)
                             ));
                             app.state = app::AppState::Browsing;
                         }
@@ -214,21 +215,4 @@ fn run_tui(root: &Path, include_global: bool, permanent: bool) -> Result<()> {
     tui::restore()?;
 
     result
-}
-
-/// Format bytes to human-readable size
-fn format_size(bytes: u64) -> String {
-    const KB: u64 = 1024;
-    const MB: u64 = KB * 1024;
-    const GB: u64 = MB * 1024;
-
-    if bytes >= GB {
-        format!("{:.1} GB", bytes as f64 / GB as f64)
-    } else if bytes >= MB {
-        format!("{:.1} MB", bytes as f64 / MB as f64)
-    } else if bytes >= KB {
-        format!("{:.1} KB", bytes as f64 / KB as f64)
-    } else {
-        format!("{} B", bytes)
-    }
 }

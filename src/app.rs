@@ -68,6 +68,29 @@ impl App {
         }
     }
 
+    /// Move selection up by page_size items
+    pub fn page_up(&mut self, page_size: usize) {
+        self.selected_index = self.selected_index.saturating_sub(page_size);
+    }
+
+    /// Move selection down by page_size items
+    pub fn page_down(&mut self, page_size: usize) {
+        let max_index = self.folders.len().saturating_sub(1);
+        self.selected_index = (self.selected_index + page_size).min(max_index);
+    }
+
+    /// Move selection to first item
+    pub fn go_home(&mut self) {
+        self.selected_index = 0;
+    }
+
+    /// Move selection to last item
+    pub fn go_end(&mut self) {
+        if !self.folders.is_empty() {
+            self.selected_index = self.folders.len() - 1;
+        }
+    }
+
     pub fn toggle_selection(&mut self) {
         if let Some(folder) = self.folders.get_mut(self.selected_index) {
             folder.selected = !folder.selected;

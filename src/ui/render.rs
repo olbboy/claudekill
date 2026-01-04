@@ -47,7 +47,7 @@ fn render_header(frame: &mut Frame, area: Rect) {
                 .fg(Color::Cyan)
                 .add_modifier(Modifier::BOLD),
         ),
-        Span::raw("v0.1.0"),
+        Span::raw(concat!("v", env!("CARGO_PKG_VERSION"))),
         Span::raw("                                        "),
         Span::styled("[?] Help  ", Style::default().fg(Color::DarkGray)),
         Span::styled("[q] Quit", Style::default().fg(Color::DarkGray)),
@@ -171,8 +171,8 @@ fn render_list(frame: &mut Frame, area: Rect, app: &App) {
 
 fn render_summary(frame: &mut Frame, area: Rect, app: &App) {
     let selected = app.selected_count();
-    let selected_size = format_size(app.selected_size());
-    let total_size = format_size(app.total_size());
+    let selected_size = crate::utils::format_size(app.selected_size());
+    let total_size = crate::utils::format_size(app.total_size());
 
     let summary = Paragraph::new(format!(
         "Selected: {} ({})                               Total: {}",
@@ -200,14 +200,17 @@ fn render_help_overlay(frame: &mut Frame) {
         "  Keyboard Shortcuts",
         "  ──────────────────",
         "",
-        "  ↑/k      Move selection up",
-        "  ↓/j      Move selection down",
-        "  Space    Toggle folder selection",
-        "  a        Select all folders",
-        "  n        Deselect all folders",
-        "  d        Delete selected folders",
-        "  ?        Toggle this help",
-        "  q/Esc    Quit",
+        "  ↑/k        Move selection up",
+        "  ↓/j        Move selection down",
+        "  PgUp/g     Page up / Go to top",
+        "  PgDn/G     Page down / Go to bottom",
+        "  Home/End   Jump to first/last",
+        "  Space      Toggle folder selection",
+        "  a          Select all folders",
+        "  n          Deselect all folders",
+        "  d          Delete selected folders",
+        "  ?          Toggle this help",
+        "  q/Esc      Quit",
         "",
         "  Press any key to close",
         "",
@@ -228,7 +231,7 @@ fn render_confirm_dialog(frame: &mut Frame, app: &App) {
     let area = centered_rect(60, 50, frame.area());
 
     let count = app.selected_count();
-    let size = format_size(app.selected_size());
+    let size = crate::utils::format_size(app.selected_size());
 
     let (method, warning) = if app.permanent_delete {
         ("PERMANENTLY DELETE", "⚠ This cannot be undone!")
@@ -304,20 +307,4 @@ fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
             Constraint::Percentage((100 - percent_x) / 2),
         ])
         .split(popup_layout[1])[1]
-}
-
-fn format_size(bytes: u64) -> String {
-    const KB: u64 = 1024;
-    const MB: u64 = KB * 1024;
-    const GB: u64 = MB * 1024;
-
-    if bytes >= GB {
-        format!("{:.1} GB", bytes as f64 / GB as f64)
-    } else if bytes >= MB {
-        format!("{:.1} MB", bytes as f64 / MB as f64)
-    } else if bytes >= KB {
-        format!("{:.1} KB", bytes as f64 / KB as f64)
-    } else {
-        format!("{} B", bytes)
-    }
 }

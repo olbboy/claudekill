@@ -13,11 +13,12 @@ pub enum Action {
 
 /// Handle keyboard events with timeout
 pub fn handle_events(app: &mut App, timeout: Duration) -> anyhow::Result<Action> {
-    if event::poll(timeout)?
-        && let Event::Key(key) = event::read()?
-        && key.kind == KeyEventKind::Press
-    {
-        return handle_key(app, key.code, key.modifiers);
+    if event::poll(timeout)? {
+        if let Event::Key(key) = event::read()? {
+            if key.kind == KeyEventKind::Press {
+                return handle_key(app, key.code, key.modifiers);
+            }
+        }
     }
     Ok(Action::None)
 }
@@ -60,6 +61,10 @@ fn handle_key(app: &mut App, code: KeyCode, modifiers: KeyModifiers) -> anyhow::
         // Navigation
         KeyCode::Up | KeyCode::Char('k') => app.move_up(),
         KeyCode::Down | KeyCode::Char('j') => app.move_down(),
+        KeyCode::PageUp => app.page_up(10),
+        KeyCode::PageDown => app.page_down(10),
+        KeyCode::Home | KeyCode::Char('g') => app.go_home(),
+        KeyCode::End | KeyCode::Char('G') => app.go_end(),
 
         // Selection
         KeyCode::Char(' ') => app.toggle_selection(),

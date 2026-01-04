@@ -28,6 +28,10 @@
 | **🛡️ FAILSAFE** | **Safe Mode active.** Targets are moved to Trash. Hard-delete is opt-in only. |
 | **🕹️ TERMINAL UI** | Keyboard-driven interface. VIM-style navigation. Pure retro feel. |
 | **🔮 X-RAY** | Real-time storage impact visualization. Know the cost before you purge. |
+| **🔍 SEARCH & FILTER** | Live search, sort by size/name/date, filter by project type. |
+| **⏪ TIME REWIND** | Undo deletions. View history. Restore from Trash. |
+| **📊 INTEL REPORTS** | Space analysis by project type, age breakdown. Export JSON/CSV. |
+| **⚙️ CONFIGURABLE** | TOML config file. Persistent preferences. Exclude patterns. |
 
 ## 📦 DEPLOYMENT
 
@@ -93,6 +97,12 @@ $ claudekill
 | `--dry-run` | **RECON.** List targets; no UI engagement. |
 | `--include-global` | **OVERRIDE.** Scan `~/.claude` global cache. |
 | `--permanent` | **INCINERATE.** Bypass Recycle Bin/Trash. **NO UNDO.** |
+| `--undo` | **TIME REWIND.** Restore last trash-based deletion. |
+| `--history` | **MISSION LOG.** View deletion history. |
+| `--report` | **INTEL BRIEFING.** Generate space analysis report. |
+| `--export <FMT>` | **DATA EXPORT.** Output format: `json` or `csv`. |
+| `--init-config` | **INITIALIZE.** Create default config file. |
+| `--config-path` | **LOCATE.** Show config file path. |
 
 ### KEYBINDINGS
 
@@ -107,8 +117,34 @@ $ claudekill
 | `a` | **MARK ALL** |
 | `n` | **UNMARK ALL** |
 | `d` | **EXECUTE** |
+| `/` | **SEARCH MODE** |
+| `s` | **CYCLE SORT** (size/name/date) |
+| `F` | **TOGGLE FILTER BAR** |
+| `c` | **CLEAR FILTERS** |
 | `?` | **HELP** |
 | `q` | **ABORT** |
+
+## ⚙️ CONFIGURATION
+
+Initialize config: `claudekill --init-config`
+
+Config location: `~/.config/claudekill/config.toml` (macOS/Linux) or `%APPDATA%\claudekill\config.toml` (Windows)
+
+```toml
+[scan]
+# default_paths = ["~/Projects", "~/Work"]
+# exclude_patterns = ["node_modules", ".git"]
+include_global = false
+
+[display]
+show_project_type = true
+show_filter_bar = false
+default_sort = "size_desc"  # size_desc, size_asc, name_asc, name_desc, date_desc, date_asc
+
+[behavior]
+permanent_delete = false
+confirm_delete = true
+```
 
 ## 📚 INTELLIGENCE
 

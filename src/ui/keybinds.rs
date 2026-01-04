@@ -1,6 +1,6 @@
 // Keybinds module - keyboard input handling
 
-use crate::app::{App, AppState};
+use crate::app::{App, AppState, InputMode};
 use crossterm::event::{self, Event, KeyCode, KeyEventKind, KeyModifiers};
 use std::time::Duration;
 
@@ -16,9 +16,33 @@ pub fn handle_events(app: &mut App, timeout: Duration) -> anyhow::Result<Action>
     if event::poll(timeout)? {
         if let Event::Key(key) = event::read()? {
             if key.kind == KeyEventKind::Press {
+                // Handle search mode separately
+                if app.input_mode == InputMode::Search {
+                    return handle_search_input(app, key.code);
+                }
                 return handle_key(app, key.code, key.modifiers);
             }
         }
+    }
+    Ok(Action::None)
+}
+
+/// Handle input in search mode
+fn handle_search_input(app: &mut App, code: KeyCode) -> anyhow::Result<Action> {
+    match code {
+        KeyCode::Esc => {
+            app.exit_search_mode();
+        }
+        KeyCode::Enter => {
+            app.apply_search();
+        }
+        KeyCode::Backspace => {
+            app.search_input.pop();
+        }
+        KeyCode::Char(c) => {
+            app.search_input.push(c);
+        }
+        _ => {}
     }
     Ok(Action::None)
 }
@@ -80,6 +104,12 @@ fn handle_key(app: &mut App, code: KeyCode, modifiers: KeyModifiers) -> anyhow::
 
         // Help
         KeyCode::Char('?') => app.show_help = !app.show_help,
+
+        // Search & Filter
+        KeyCode::Char('/') => app.enter_search_mode(),
+        KeyCode::Char('F') => app.toggle_filter_bar(),
+        KeyCode::Char('s') => app.cycle_sort(),
+        KeyCode::Char('c') => app.clear_filters(),
 
         _ => {}
     }

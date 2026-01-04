@@ -37,7 +37,17 @@
 brew install olbboy/tap/claudekill
 ```
 
-### RUST // CARGO
+### WINDOWS
+
+```powershell
+cargo install claudekill
+# OR via Binstall
+cargo binstall claudekill
+```
+
+**Manual:** Download `claudekill-x86_64-pc-windows-msvc.zip` from [Releases](https://github.com/olbboy/claudekill/releases), extract, add to PATH.
+
+### LINUX // CARGO
 
 ```bash
 cargo install claudekill
@@ -48,7 +58,7 @@ cargo binstall claudekill
 ### MANUAL // BINARY
 
 1.  Access [**GITHUB RELEASES**](https://github.com/olbboy/claudekill/releases).
-2.  Acquire target binary (`x86_64` / `aarch64`).
+2.  Acquire target binary (`x86_64` / `aarch64` / `windows`).
 3.  Execute.
 
 ## 🎮 COMMAND DECK
@@ -82,7 +92,7 @@ $ claudekill
 | `--path <DIR>` | **TARGET LOCK.** Scan specific sector only. |
 | `--dry-run` | **RECON.** List targets; no UI engagement. |
 | `--include-global` | **OVERRIDE.** Scan `~/.claude` global cache. |
-| `--permanent` | **INCINERATE.** Bypass Trash. **NO UNDO.** |
+| `--permanent` | **INCINERATE.** Bypass Recycle Bin/Trash. **NO UNDO.** |
 
 ### KEYBINDINGS
 
@@ -90,9 +100,14 @@ $ claudekill
 | :--- | :--- |
 | `k` / `↑` | **UP** |
 | `j` / `↓` | **DOWN** |
+| `PgUp` / `g` | **PAGE UP / TOP** |
+| `PgDn` / `G` | **PAGE DOWN / BOTTOM** |
+| `Home` / `End` | **FIRST / LAST** |
 | `SPACE` | **MARK TARGET** |
 | `a` | **MARK ALL** |
+| `n` | **UNMARK ALL** |
 | `d` | **EXECUTE** |
+| `?` | **HELP** |
 | `q` | **ABORT** |
 
 ## 📚 INTELLIGENCE

@@ -1,32 +1,58 @@
 // Render module - TUI layout and widgets
 
-use crate::app::{App, AppState};
+use crate::app::{App, AppState, InputMode};
 use ratatui::{
-    Frame,
     layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
     text::{Line, Span},
     widgets::{Block, Borders, Clear, List, ListItem, Paragraph},
+    Frame,
 };
 
 /// Render the application UI
 pub fn render(frame: &mut Frame, app: &App) {
-    let chunks = Layout::default()
-        .direction(Direction::Vertical)
-        .constraints([
-            Constraint::Length(3), // Header
-            Constraint::Length(3), // Status bar
-            Constraint::Min(10),   // List
-            Constraint::Length(3), // Summary
-            Constraint::Length(2), // Keybinds
-        ])
-        .split(frame.area());
+    // Adjust layout based on filter bar visibility
+    let chunks = if app.show_filter_bar || app.input_mode == InputMode::Search {
+        Layout::default()
+            .direction(Direction::Vertical)
+            .constraints([
+                Constraint::Length(3), // Header
+                Constraint::Length(3), // Filter bar
+                Constraint::Length(3), // Status bar
+                Constraint::Min(10),   // List
+                Constraint::Length(3), // Summary
+                Constraint::Length(2), // Keybinds
+            ])
+            .split(frame.area())
+    } else {
+        Layout::default()
+            .direction(Direction::Vertical)
+            .constraints([
+                Constraint::Length(3), // Header
+                Constraint::Length(3), // Status bar
+                Constraint::Min(10),   // List
+                Constraint::Length(3), // Summary
+                Constraint::Length(2), // Keybinds
+            ])
+            .split(frame.area())
+    };
 
-    render_header(frame, chunks[0]);
-    render_status(frame, chunks[1], app);
-    render_list(frame, chunks[2], app);
-    render_summary(frame, chunks[3], app);
-    render_keybinds(frame, chunks[4]);
+    let mut idx = 0;
+    render_header(frame, chunks[idx], app);
+    idx += 1;
+
+    if app.show_filter_bar || app.input_mode == InputMode::Search {
+        render_filter_bar(frame, chunks[idx], app);
+        idx += 1;
+    }
+
+    render_status(frame, chunks[idx], app);
+    idx += 1;
+    render_list(frame, chunks[idx], app);
+    idx += 1;
+    render_summary(frame, chunks[idx], app);
+    idx += 1;
+    render_keybinds(frame, chunks[idx]);
 
     // Overlay help if shown
     if app.show_help {
@@ -39,7 +65,17 @@ pub fn render(frame: &mut Frame, app: &App) {
     }
 }
 
-fn render_header(frame: &mut Frame, area: Rect) {
+fn render_header(frame: &mut Frame, area: Rect, app: &App) {
+    let mode_indicator = match app.input_mode {
+        InputMode::Normal => Span::raw(""),
+        InputMode::Search => Span::styled(
+            " [SEARCH] ",
+            Style::default()
+                .fg(Color::Yellow)
+                .add_modifier(Modifier::BOLD),
+        ),
+    };
+
     let title = Paragraph::new(vec![Line::from(vec![
         Span::styled(
             "claudekill ",
@@ -48,13 +84,50 @@ fn render_header(frame: &mut Frame, area: Rect) {
                 .add_modifier(Modifier::BOLD),
         ),
         Span::raw(concat!("v", env!("CARGO_PKG_VERSION"))),
-        Span::raw("                                        "),
+        mode_indicator,
+        Span::raw("                              "),
         Span::styled("[?] Help  ", Style::default().fg(Color::DarkGray)),
         Span::styled("[q] Quit", Style::default().fg(Color::DarkGray)),
     ])])
     .block(Block::default().borders(Borders::ALL));
 
     frame.render_widget(title, area);
+}
+
+fn render_filter_bar(frame: &mut Frame, area: Rect, app: &App) {
+    let search_text = if app.input_mode == InputMode::Search {
+        format!("Search: {}▌", app.search_input)
+    } else {
+        app.filter
+            .search_query
+            .as_ref()
+            .map(|s| format!("Search: {}", s))
+            .unwrap_or_else(|| "Search: -".to_string())
+    };
+
+    let sort_text = format!("Sort: {}", app.sort_order.label());
+
+    let filter_status = if app.filter.is_active() {
+        format!("Showing {} of {}", app.visible_count(), app.folders.len())
+    } else {
+        String::new()
+    };
+
+    let filter_text = format!(" {}  │  {}  {}", search_text, sort_text, filter_status);
+
+    let style = if app.input_mode == InputMode::Search {
+        Style::default().fg(Color::Yellow)
+    } else {
+        Style::default().fg(Color::DarkGray)
+    };
+
+    let bar = Paragraph::new(filter_text).style(style).block(
+        Block::default()
+            .borders(Borders::ALL)
+            .title(" Filters [/] Search  [s] Sort  [c] Clear "),
+    );
+
+    frame.render_widget(bar, area);
 }
 
 fn render_status(frame: &mut Frame, area: Rect, app: &App) {
@@ -108,12 +181,14 @@ fn render_status(frame: &mut Frame, area: Rect, app: &App) {
 
 fn render_list(frame: &mut Frame, area: Rect, app: &App) {
     let home = dirs::home_dir();
+    let visible_indices = app.visible_folder_indices();
 
-    let items: Vec<ListItem> = app
-        .folders
+    let items: Vec<ListItem> = visible_indices
         .iter()
         .enumerate()
-        .map(|(i, folder)| {
+        .map(|(display_idx, &folder_idx)| {
+            let folder = &app.folders[folder_idx];
+
             // Check if this is the global ~/.claude folder
             let is_global = home
                 .as_ref()
@@ -139,7 +214,7 @@ fn render_list(frame: &mut Frame, area: Rect, app: &App) {
                 folder.project_type.clone()
             };
 
-            let style = if i == app.selected_index {
+            let style = if display_idx == app.selected_index {
                 Style::default()
                     .bg(Color::DarkGray)
                     .add_modifier(Modifier::BOLD)
@@ -160,11 +235,17 @@ fn render_list(frame: &mut Frame, area: Rect, app: &App) {
         })
         .collect();
 
-    let list = List::new(items).block(
-        Block::default()
-            .borders(Borders::ALL)
-            .title(" .claude folders "),
-    );
+    let title = if app.filter.is_active() {
+        format!(
+            " .claude folders ({} of {}) ",
+            visible_indices.len(),
+            app.folders.len()
+        )
+    } else {
+        " .claude folders ".to_string()
+    };
+
+    let list = List::new(items).block(Block::default().borders(Borders::ALL).title(title));
 
     frame.render_widget(list, area);
 }
@@ -185,7 +266,7 @@ fn render_summary(frame: &mut Frame, area: Rect, app: &App) {
 
 fn render_keybinds(frame: &mut Frame, area: Rect) {
     let keybinds = Paragraph::new(
-        "[Space] Toggle   [a] All   [n] None   [d] Delete   [↑↓/jk] Navigate   [q] Quit",
+        "[Space] Toggle  [a/n] All/None  [d] Delete  [/] Search  [s] Sort  [?] Help  [q] Quit",
     )
     .style(Style::default().fg(Color::DarkGray));
 
@@ -193,22 +274,31 @@ fn render_keybinds(frame: &mut Frame, area: Rect) {
 }
 
 fn render_help_overlay(frame: &mut Frame) {
-    let area = centered_rect(60, 60, frame.area());
+    let area = centered_rect(60, 70, frame.area());
 
     let help_text = vec![
         "",
-        "  Keyboard Shortcuts",
-        "  ──────────────────",
+        "  Navigation",
+        "  ──────────",
+        "  ↑/k, ↓/j   Move up/down",
+        "  PgUp/PgDn  Page up/down",
+        "  g/G        Go to top/bottom",
         "",
-        "  ↑/k        Move selection up",
-        "  ↓/j        Move selection down",
-        "  PgUp/g     Page up / Go to top",
-        "  PgDn/G     Page down / Go to bottom",
-        "  Home/End   Jump to first/last",
-        "  Space      Toggle folder selection",
-        "  a          Select all folders",
-        "  n          Deselect all folders",
-        "  d          Delete selected folders",
+        "  Selection",
+        "  ─────────",
+        "  Space      Toggle selection",
+        "  a/n        Select all/none",
+        "  d          Delete selected",
+        "",
+        "  Search & Filter",
+        "  ───────────────",
+        "  /          Enter search mode",
+        "  F          Toggle filter bar",
+        "  s          Cycle sort order",
+        "  c          Clear all filters",
+        "",
+        "  Other",
+        "  ─────",
         "  ?          Toggle this help",
         "  q/Esc      Quit",
         "",

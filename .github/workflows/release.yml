@@ -15,10 +15,16 @@ jobs:
         include:
           - os: macos-latest
             target: x86_64-apple-darwin
+            archive: tar.gz
           - os: macos-latest
             target: aarch64-apple-darwin
+            archive: tar.gz
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
+            archive: tar.gz
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            archive: zip
 
     runs-on: ${{ matrix.os }}
 
@@ -36,16 +42,24 @@ jobs:
       - name: Build
         run: cargo build --release --target ${{ matrix.target }}
 
-      - name: Package
+      - name: Package (Unix)
+        if: matrix.archive == 'tar.gz'
         run: |
           cd target/${{ matrix.target }}/release
           tar czvf claudekill-${{ matrix.target }}.tar.gz claudekill
+
+      - name: Package (Windows)
+        if: matrix.archive == 'zip'
+        shell: pwsh
+        run: |
+          cd target/${{ matrix.target }}/release
+          Compress-Archive -Path claudekill.exe -DestinationPath claudekill-${{ matrix.target }}.zip
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: claudekill-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/claudekill-${{ matrix.target }}.tar.gz
+          path: target/${{ matrix.target }}/release/claudekill-${{ matrix.target }}.${{ matrix.archive }}
 
   release:
     needs: build
@@ -61,5 +75,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            claudekill-*/claudekill-*.tar.gz
+            claudekill-*/claudekill-*
           generate_release_notes: true

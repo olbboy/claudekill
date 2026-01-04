@@ -3,5 +3,5 @@
 pub mod keybinds;
 pub mod render;
 
-pub use keybinds::{Action, handle_events};
+pub use keybinds::{handle_events, Action};
 pub use render::render;

@@ -5,7 +5,7 @@ use std::ffi::OsStr;
 use std::fs;
 use std::path::PathBuf;
 
-/// Move folders to macOS Trash
+/// Move folders to system Trash/Recycle Bin
 pub fn move_to_trash(paths: &[PathBuf]) -> Result<()> {
     for path in paths {
         trash::delete(path)
@@ -25,15 +25,30 @@ pub fn permanent_delete(paths: &[PathBuf]) -> Result<()> {
 
 /// Validate paths before deletion - safety checks
 pub fn validate_deletion(paths: &[PathBuf]) -> Result<()> {
-    // Forbidden system directories
-    let forbidden = ["/", "/Users", "/System", "/Library", "/Applications"];
+    // Forbidden system directories (platform-specific)
+    #[cfg(target_os = "windows")]
+    let forbidden: &[&str] = &[
+        "C:\\",
+        "C:\\Windows",
+        "C:\\Program Files",
+        "C:\\Program Files (x86)",
+        "C:\\Users",
+    ];
+
+    #[cfg(not(target_os = "windows"))]
+    let forbidden: &[&str] = &["/", "/Users", "/System", "/Library", "/Applications"];
 
     for path in paths {
         let path_str = path.to_string_lossy();
 
-        // Check against forbidden paths
-        for forbidden_path in &forbidden {
-            if path_str == *forbidden_path {
+        // Check against forbidden paths (case-insensitive on Windows)
+        for forbidden_path in forbidden {
+            #[cfg(target_os = "windows")]
+            let matches = path_str.eq_ignore_ascii_case(forbidden_path);
+            #[cfg(not(target_os = "windows"))]
+            let matches = path_str == *forbidden_path;
+
+            if matches {
                 anyhow::bail!("Refusing to delete system directory: {}", path_str);
             }
         }
@@ -81,12 +96,10 @@ mod tests {
 
         let result = validate_deletion(&[other_path]);
         assert!(result.is_err());
-        assert!(
-            result
-                .unwrap_err()
-                .to_string()
-                .contains("Not a .claude folder")
-        );
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("Not a .claude folder"));
     }
 
     #[test]
@@ -125,5 +138,21 @@ mod tests {
         let result = move_to_trash(&[claude_path.clone()]);
         assert!(result.is_ok());
         assert!(!claude_path.exists());
+    }
+
+    #[test]
+    #[cfg(target_os = "windows")]
+    fn test_validate_deletion_rejects_windows_system_paths() {
+        let result = validate_deletion(&[PathBuf::from("C:\\Users")]);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("system directory"));
+    }
+
+    #[test]
+    #[cfg(target_os = "windows")]
+    fn test_validate_deletion_rejects_windows_root() {
+        let result = validate_deletion(&[PathBuf::from("C:\\")]);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("system directory"));
     }
 }

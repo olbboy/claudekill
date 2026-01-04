@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.1.1] - 2026-01-05
+
+### Changed
+- **Branding**: Complete aesthetic overhaul to "Retro Punk / Cyberpunk".
+- **Documentation**: New `README.md` with ASCII art, gradient logo, and badge system.
+- **Assets**: Added `docs/logo.svg`.
+
 ## [v0.1.0] - 2026-01-04
 
 ### Added

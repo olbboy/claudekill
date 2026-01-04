@@ -1,9 +1,9 @@
 [package]
 name = "claudekill"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 authors = ["olbboy"]
-description = "Interactive CLI to find and delete .claude folders"
+description = "A high-velocity, terminal-native instrument designed to hunt down and neutralize .claude cache directories."
 license = "MIT"
 repository = "https://github.com/olbboy/claudekill"
 homepage = "https://github.com/olbboy/claudekill"

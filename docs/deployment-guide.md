@@ -19,7 +19,7 @@ cargo install claudekill
 ### 2. Homebrew (Recommended for macOS users)
 
 ```bash
-brew install leozqin/tap/claudekill
+brew install olbboy/tap/claudekill
 ```
 
 **How it works**:
@@ -31,7 +31,7 @@ brew install leozqin/tap/claudekill
 **Setup** (one-time):
 ```bash
 # Add tap (alternative: done automatically on install)
-brew tap leozqin/tap
+brew tap olbboy/tap
 ```
 
 **Verification**:
@@ -45,7 +45,7 @@ claudekill --version
 ### 3. GitHub Releases (For all platforms)
 
 **Manual download**:
-1. Visit https://github.com/leozqin/claudekill/releases
+1. Visit https://github.com/olbboy/claudekill/releases
 2. Download binary for your platform:
    - `claudekill-x86_64-apple-darwin.tar.gz` (Intel macOS)
    - `claudekill-aarch64-apple-darwin.tar.gz` (Apple Silicon)
@@ -209,7 +209,7 @@ cargo binstall claudekill
 - **Cause**: Tap not properly configured
 - **Solution**:
   ```bash
-  brew tap leozqin/tap
+  brew tap olbboy/tap
   brew install claudekill
   ```
 

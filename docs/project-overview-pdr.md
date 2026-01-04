@@ -10,7 +10,7 @@
 
 1. **Multi-platform installation support**
    - Cargo: `cargo install claudekill` (crates.io)
-   - Homebrew: `brew install leozqin/tap/claudekill` (macOS)
+   - Homebrew: `brew install olbboy/tap/claudekill` (macOS)
    - GitHub Releases: Direct binary downloads
    - cargo-binstall support for optimized downloads
 

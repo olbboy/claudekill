@@ -2,12 +2,12 @@
 name = "claudekill"
 version = "0.1.0"
 edition = "2024"
-authors = ["Leo <leo@example.com>"]
+authors = ["olbboy"]
 description = "Interactive CLI to find and delete .claude folders"
 license = "MIT"
-repository = "https://github.com/leozqin/claudekill"
-homepage = "https://github.com/leozqin/claudekill"
-documentation = "https://github.com/leozqin/claudekill#readme"
+repository = "https://github.com/olbboy/claudekill"
+homepage = "https://github.com/olbboy/claudekill"
+documentation = "https://github.com/olbboy/claudekill#readme"
 readme = "README.md"
 keywords = ["cli", "tui", "claude", "cleanup", "disk-space"]
 categories = ["command-line-utilities"]

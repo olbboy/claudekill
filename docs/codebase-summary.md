@@ -165,14 +165,14 @@ cargo install claudekill
 **Metadata** (from Cargo.toml):
 - Name: claudekill
 - License: MIT
-- Repository: https://github.com/leozqin/claudekill
+- Repository: https://github.com/olbboy/claudekill
 - Keywords: cli, tui, claude, cleanup, disk-space
 - Cargo-binstall support for pre-compiled downloads
 
 ### 2. Homebrew (macOS)
 
 ```bash
-brew install leozqin/tap/claudekill
+brew install olbboy/tap/claudekill
 ```
 
 **Formula** (`homebrew/claudekill.rb`):
@@ -255,7 +255,7 @@ edition = "2024"
 authors = ["Leo <leo@example.com>"]
 description = "Interactive CLI to find and delete .claude folders"
 license = "MIT"
-repository = "https://github.com/leozqin/claudekill"
+repository = "https://github.com/olbboy/claudekill"
 readme = "README.md"
 keywords = ["cli", "tui", "claude", "cleanup", "disk-space"]
 categories = ["command-line-utilities"]

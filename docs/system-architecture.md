@@ -88,10 +88,10 @@ Enables `cargo-binstall` to download pre-compiled binaries from GitHub Releases.
 
 ### 2. Homebrew (macOS)
 
-**Installation**: `brew install leozqin/tap/claudekill`
+**Installation**: `brew install olbboy/tap/claudekill`
 
 **Formula Location**: `homebrew/claudekill.rb` in project repo
-(Installed in leozqin/tap tap)
+(Installed in olbboy/tap tap)
 
 **Formula Structure**:
 - Platform detection: ARM64 vs Intel macOS

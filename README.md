@@ -18,12 +18,12 @@ Like [npkill](https://github.com/voidcosmos/npkill) but for Claude Code cache di
 ### Homebrew (macOS) - Recommended
 
 ```bash
-brew install leozqin/tap/claudekill
+brew install olbboy/tap/claudekill
 ```
 
 **First time setup** (one-time):
 ```bash
-brew tap leozqin/tap
+brew tap olbboy/tap
 brew install claudekill
 ```
 
@@ -41,7 +41,7 @@ cargo binstall claudekill
 
 ### Binary Release (Manual install)
 
-Download pre-compiled binaries from [GitHub Releases](https://github.com/leozqin/claudekill/releases):
+Download pre-compiled binaries from [GitHub Releases](https://github.com/olbboy/claudekill/releases):
 
 - `claudekill-x86_64-apple-darwin.tar.gz` - macOS Intel
 - `claudekill-aarch64-apple-darwin.tar.gz` - macOS Apple Silicon (M1/M2/M3)

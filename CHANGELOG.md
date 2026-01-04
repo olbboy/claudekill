@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.5.0] - 2026-01-05
+
+### Added
+- **Search & Filter**: Real-time search functionality to filter directories by name.
+- **Sort Options**: Sort results by name, size, or modification date.
+- **Configuration**: Persistent settings via TOML config file (`~/.config/claudekill/config.toml`).
+- **History Management**: Track and recall previously scanned directories.
+- **Page Navigation**: Paginated list view with `PgUp`/`PgDn` support.
+- **Windows Compatibility**: Platform-specific path handling and improved cross-platform support.
+
+### Changed
+- Added new dependencies: `toml`, `serde`, `serde_json`, `directories`, `chrono`.
+- DRY refactor for improved code maintainability.
+- Updated Rust edition to 2021.
+
+### Fixed
+- Homebrew formula SHA256 checksums.
+- Binary artifact distribution.
+
 ## [v0.1.1] - 2026-01-05
 
 ### Changed
